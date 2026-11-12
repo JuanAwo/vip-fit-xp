@@ -1,3 +1,6 @@
+TOLERANCIA = 1e-6
+
+
 def calcular_van(inversion_inicial: float, tasa_descuento: float, flujos_caja: list[float]) -> float:
     if inversion_inicial <= 0:
         raise ValueError("La inversión inicial debe ser mayor a cero.")
@@ -11,10 +14,10 @@ def calcular_van(inversion_inicial: float, tasa_descuento: float, flujos_caja: l
         van += flujo / ((1 + tasa_descuento) ** t)
     return van
 
+
 def calcular_tir(inversion_inicial: float, flujos_caja: list[float]) -> float | None:
     lim_inf = -0.99
     lim_sup = 10.00
-    tolerancia = 1e-6
     max_iter = 1000
 
     van_inf = calcular_van(inversion_inicial, lim_inf, flujos_caja)
@@ -27,7 +30,7 @@ def calcular_tir(inversion_inicial: float, flujos_caja: list[float]) -> float | 
         punto_medio = (lim_inf + lim_sup) / 2
         van_medio = calcular_van(inversion_inicial, punto_medio, flujos_caja)
 
-        if abs(van_medio) <= tolerancia:
+        if abs(van_medio) <= TOLERANCIA:
             return punto_medio
 
         if van_inf * van_medio < 0:
@@ -39,15 +42,18 @@ def calcular_tir(inversion_inicial: float, flujos_caja: list[float]) -> float | 
 
     return None
 
+
 def evaluar_van(van: float) -> str:
-    if abs(van) <= 1e-6:
+    if abs(van) <= TOLERANCIA:
         return "Indiferente"
     return "Viable" if van > 0 else "No viable"
 
+
 def evaluar_tir(tir: float, tasa_descuento: float) -> str:
-    if abs(tir - tasa_descuento) <= 1e-6:
+    if abs(tir - tasa_descuento) <= TOLERANCIA:
         return "Indiferente"
     return "Aceptable" if tir > tasa_descuento else "Insuficiente"
+
 
 def generar_dictamen(eval_van: str, eval_tir: str) -> str:
     matriz = {
