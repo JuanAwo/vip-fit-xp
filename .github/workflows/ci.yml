@@ -1,0 +1,51 @@
+name: Pipeline XP - TDD y Despliegue Continuo
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-python:
+    name: Backend Tests (Python unittest)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Ejecutar pruebas Python
+        run: python -m unittest discover -s python_project/tests -p "test_*.py" -v
+
+  test-javascript:
+    name: Frontend Tests (Node.js nativo)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Ejecutar pruebas JavaScript
+        run: node --test javascript_project/tests/*.test.js
+
+  
+  # deploy:
+  #   name: Despliegue Continuo (Apache Local)
+  #   needs: [test-python, test-javascript]
+  #   runs-on: self-hosted
+  #   steps:
+  #     - name: Descargar código
+  #       uses: actions/checkout@v4
+  #     - name: Copiar al servidor web Apache
+  #       run: |
+  #         sudo rm -rf /var/www/html/*
+  #         sudo cp -r javascript_project/src/* /var/www/html/
