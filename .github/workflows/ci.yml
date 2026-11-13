@@ -37,15 +37,15 @@ jobs:
       - name: Ejecutar pruebas JavaScript
         run: node --test javascript_project/tests/*.test.js
 
-  
-  # deploy:
-  #   name: Despliegue Continuo (Apache Local)
-  #   needs: [test-python, test-javascript]
-  #   runs-on: self-hosted
-  #   steps:
-  #     - name: Descargar código
-  #       uses: actions/checkout@v4
-  #     - name: Copiar al servidor web Apache
-  #       run: |
-  #         sudo rm -rf /var/www/html/*
-  #         sudo cp -r javascript_project/src/* /var/www/html/
+  deploy:
+    name: Despliegue Continuo (Apache Local)
+    needs: [test-python, test-javascript]
+    runs-on: self-hosted
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Copiar al servidor web Apache
+        run: |
+          rm -rf /var/www/html/*
+          cp -r javascript_project/src/* /var/www/html/
