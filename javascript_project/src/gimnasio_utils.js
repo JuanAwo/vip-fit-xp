@@ -1,11 +1,12 @@
+const REGEX_DOCUMENTO = /^[0-9]{6,12}$/;
+const REGEX_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function validarDocumento(documento) {
-    const regex = /^[0-9]{6,12}$/;
-    return regex.test(String(documento));
+    return REGEX_DOCUMENTO.test(String(documento));
 }
 
 export function validarCorreo(correo) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(String(correo));
+    return REGEX_CORREO.test(String(correo));
 }
 
 export function calcularFechaVencimiento(fechaInicioISO, diasDuracion) {
@@ -18,7 +19,8 @@ export function calcularDescuentoMembresia(precioBase, porcentajeDescuento) {
     if (porcentajeDescuento < 0 || porcentajeDescuento > 100) {
         throw new Error('Error: El porcentaje de descuento debe estar entre 0 y 100');
     }
-    return precioBase - (precioBase * (porcentajeDescuento / 100));
+    const factorDescuento = 1 - (porcentajeDescuento / 100);
+    return precioBase * factorDescuento;
 }
 
 export function obtenerEstadoMembresia(fechaVencimientoISO, fechaActualISO) {
